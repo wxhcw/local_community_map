@@ -1,0 +1,303 @@
+:root {
+  --bg: #121212;
+  --card-bg: #1a1a1a;
+  --surface: #101216;
+  --text: rgba(255,255,255,0.92);
+  --muted: #9aa4b2;
+  --primary: #646cff;
+  --primary-600: #535bf2;
+  --radius: 10px;
+  --gap: 12px;
+  --header-height: 72px;
+
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: var(--text);
+  background-color: var(--bg);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Layout */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap);
+  padding: 0 1.25rem;
+  background: linear-gradient(90deg, rgba(255,255,255,0.02), transparent);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.header h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--text);
+}
+
+.main {
+  flex: 1 1 auto;
+  display: flex;
+  gap: var(--gap);
+  padding: 1rem;
+  overflow: hidden; /* prevent main from scrolling; let children handle scrolling */
+  height: calc(100vh - var(--header-height)); /* ensure a fixed available height for children */
+}
+
+.sidebar {
+  width: 320px;
+  max-width: 40%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-height: 0; /* allow child flex items to constrain height */
+  height: 100%;
+}
+
+/* Make the list card fill available sidebar space and scroll internally */
+.sidebar > .card.list {
+  flex: 1 1 auto;
+  min-height: 0; /* important so overflow works inside flex */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* The inner list (from LocationList) should scroll */
+.sidebar > .card.list > .list {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  height: 100%;
+}
+
+.content {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-height: 0;
+}
+
+.map-wrapper {
+  flex: 1 1 auto;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--card-bg);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+  min-height: 0;
+}
+
+/* Reusable card */
+.card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+  border: 1px solid rgba(255,255,255,0.03);
+  border-radius: var(--radius);
+  padding: 0.75rem;
+  color: var(--text);
+}
+
+.filter .category {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0;
+}
+
+/* Location list */
+.list {
+  overflow-y: auto;
+  border-radius: var(--radius);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+.list-item {
+  padding: 0.75rem;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+}
+.list-item:hover {
+  background: rgba(100,108,255,0.06);
+}
+.list-item.active {
+  background: rgba(100,240,255,0.08);
+}
+.list-item .meta {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.list-item .top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.list-item .top-row .title {
+  font-weight: 700;
+}
+
+
+/* Controls */
+.btn {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background-color: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+.btn:hover { border-color: var(--primary); }
+.btn.active {
+  background: linear-gradient(90deg, rgba(100,108,255,0.12), rgba(100,108,255,0.06));
+  border-color: var(--primary);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #ffffff;
+    --card-bg: #ffffff;
+    --text: #213547;
+    --muted: #69737f;
+    --surface: #f7f9fb;
+  }
+}
+
+@media (max-width: 800px) {
+  .main { flex-direction: column; }
+  .sidebar { width: 100%; max-width: 100%; }
+  .map-wrapper { order: 2; height: 60vh; }
+}
+
+/* Marker tweaks */
+.custom-marker img { display: block; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.35)); }
+.custom-marker { transform: translateZ(0); }
+.custom-marker.active img { filter: drop-shadow(0 8px 18px rgba(0,0,0,0.5)); transform: scale(1.04); animation: marker-bounce 1.2s infinite ease-in-out; transform-origin: 50% 100%; }
+
+@keyframes marker-bounce {
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-8px) scale(1.06); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .custom-marker.active img { animation: none; transform: scale(1.04); }
+}
+
+.user-marker svg { display: block; filter: drop-shadow(0 6px 14px rgba(0,0,0,0.4)); }
+
+.user-div-icon {
+  pointer-events: none; /* interactions handled by the marker wrapper */
+}
+
+/* Pulsing effect for the user's ripple (SVG gradient handles subtle halo) */
+.user-marker { transform-origin: center center; animation: pulse 1.6s infinite ease-in-out; }
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.16); opacity: 0.85; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Add-mode UX */
+.map-wrapper.add-mode .leaflet-container { cursor: crosshair; }
+
+.map-instruction {
+  position: absolute;
+  z-index: 500;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 12px;
+  padding: 0.5rem 0.9rem;
+  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.04);
+  color: var(--text);
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+}
+
+/* Export dropdown */
+.export-dropdown { position: relative; display: inline-block; }
+.export-dropdown .export-btn { display: inline-flex; align-items: center; gap: 0.4rem; }
+.export-menu {
+  position: absolute;
+  /* overlap slightly so there's no gap when moving mouse from the button to the menu */
+  top: calc(100% + 0px);
+  right: 0;
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  min-width: 160px;
+  background: var(--card-bg);
+  border: 1px solid rgba(255,255,255,0.03);
+  border-radius: 8px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.45);
+  z-index: 1000;
+} 
+
+/* Show on hover, keyboard focus, or explicit open state */
+.export-dropdown:hover .export-menu,
+.export-dropdown:focus-within .export-menu,
+.export-dropdown.open .export-menu { display: flex; }
+
+/* If the menu was just closed by a click, force it hidden briefly so clicks from hover still close it */
+.export-dropdown.just-closed .export-menu { display: none !important; }
+
+.export-menu .btn { width: 100%; text-align: left; padding: 0.5rem; background: transparent; border-radius: 6px; }
+.export-menu .btn:hover { background: rgba(100,108,255,0.06); border-color: var(--primary); }
+
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
