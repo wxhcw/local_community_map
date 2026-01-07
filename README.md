@@ -1,73 +1,79 @@
-# React + TypeScript + Vite
+# Local Community Map 📍
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A small demo app built with **React**, **TypeScript**, and **Vite** that uses **Leaflet** and **react-leaflet** to display local places on a map. You can add, import, and export places, filter by category, and view places both on the map and in a list.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features ✅
 
-## React Compiler
+- Add new places by placing a pin on the map (draggable marker for new places)
+- Filter places by category (categories live in `src/data/categories.ts`)
+- Interactive list and map: selecting a list item opens the map popup and centers the map optionally
+- Import / Export places: supports **GeoJSON** and **CSV** formats
+- Show user location and optionally sort by distance
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Quick Start 🚀
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Install dependencies
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Start the development server
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
+# open http://localhost:5173
 ```
+
+3. Build and preview
+
+```bash
+npm run build
+npm run preview
+```
+
+4. Lint
+
+```bash
+npm run lint
+```
+
+---
+
+## Project Structure 🔧
+
+- `src/components/` — UI components (`MapView.tsx`, `LocationList.tsx`, `AddLocationForm.tsx`, `CategoryFilter.tsx`)
+- `src/data/`
+  - `categories.ts` — category list (string union)
+  - `locations.ts` — example locations and `LocationItem` type
+- `src/utils/`
+  - `fixLeafletIcon.ts` — fixes Leaflet default icon paths (imported in `App.tsx`)
+  - `markerIcons.ts` — category-based marker icons
+  - `distance.ts` — haversine distance utility
+- `public/` — static assets
+
+---
+
+## Data import/export ✉️
+
+- Export to GeoJSON or CSV from the UI
+- Import GeoJSON (FeatureCollection of Point features) or CSV with headers: `id,name,category,lat,lng,description`
+
+---
+
+## Customization Tips 💡
+
+- Add or remove categories in `src/data/categories.ts` to change the filter options
+- Modify `src/utils/markerIcons.ts` to provide different marker styles per category
+
+---
+
+## License & Notes ⚠️
+
+This repository currently does not include a `LICENSE` file. Add a license (for example MIT) if you intend to publish the project publicly.
+
+> Note: Allow your browser to access location services to use the "show my location" and "sort by distance" features.
